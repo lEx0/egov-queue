@@ -9,8 +9,14 @@ import (
 
 func main() {
 	redisAddr := os.Getenv("REDIS_ADDR")
+	debug := os.Getenv("DEBUG")
+
 	if len(redisAddr) == 0 {
 		redisAddr = "redis:6379"
+	}
+
+	if debug == "1" {
+		logrus.SetLevel(logrus.DebugLevel)
 	}
 
 	c := GetClient(redisAddr)
@@ -19,34 +25,26 @@ func main() {
 
 	// подписываемся на события истекания ключей (=бездействующие пользователи),
 	// и удаляем истекшие ключи из очереди
-	pubsub := c.Client.Subscribe("__keyevent@0__:expired")
+	pubsub := c.Subscribe("__keyevent@0__:expired")
 	ch := pubsub.Channel()
 
 	for msg := range ch {
-		logrus.Infoln(msg.Channel, msg.Payload)
-		// для решения Антона
-		c.Client.ZRem("user_queue", msg.Payload)
-		// для решения Амана
-		c.Client.Incr("global_offset")
+		logrus.Debugln(msg.Channel, msg.Payload)
+		c.Incr("global_offset")
 	}
 }
 
-type RedisStorage struct {
-	Client *redis.Client
-}
-
-func GetClient(addr string) *RedisStorage {
-	strg := &RedisStorage{}
+func GetClient(addr string) *redis.Client {
 	opts := &redis.Options{
 		Addr:        addr,
 		ReadTimeout: time.Second * 2,
 		PoolSize:    20,
 	}
 
-	strg.Client = redis.NewClient(opts)
+	client := redis.NewClient(opts)
 
 	for {
-		_, err := strg.Client.Ping().Result()
+		_, err := client.Ping().Result()
 		if err != nil {
 			logrus.WithError(err).Error("Could not connect to redis")
 			time.Sleep(time.Second)
@@ -55,5 +53,5 @@ func GetClient(addr string) *RedisStorage {
 		}
 	}
 
-	return strg
+	return client
 }
