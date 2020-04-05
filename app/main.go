@@ -24,7 +24,10 @@ func main() {
 
 	for msg := range ch {
 		logrus.Infoln(msg.Channel, msg.Payload)
+		// для решения Антона
 		c.Client.ZRem("user_queue", msg.Payload)
+		// для решения Амана
+		c.Client.Decr("global_counter")
 	}
 }
 
