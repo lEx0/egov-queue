@@ -15,14 +15,15 @@ services:
         max-size: "1k"
   redis:
     image: redis:4.0
-    command: "redis-server --notify-keyspace-events KEgx --loglevel debug"
+    # важно запускать редис с notify-keyspace-events KEgx, чтобы он уведомлял об истечении действия ключей
+    command: "redis-server --notify-keyspace-events KEgx"
     volumes:
       - redis:/data
     logging:
       driver: "json-file"
       options:
         max-size: "1k"
-  # программа на го удаляет истекшие ключи из очереди
+  # программа на го увеличивает счетчик свободных мест, когда ключ пользователя удаляется из-за бедействия
   watcher:
     image: golang:1.13
     volumes:

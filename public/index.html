@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="RU_ru">
 <head>
-    <!-- здесь надо подменить при отдаче страницы 4 на текущее положение в очереди -->
-    <title>Ваша позиции в очереди __POSITION__</title>
+    <!-- __POSITION__ надо подменить при отдаче страницы на текущее положение в очереди -->
+    <title>Ваша позиции в очереди - __POSITION__</title>
     <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="5">
     <style>
         div.fluent-block {
             width: 400px;
@@ -39,36 +40,9 @@
 </head>
 <body>
 <div class="fluent-block">
-    <!-- здесь надо подменить при отдаче страницы 4 на текущее положение в очереди -->
+    <!-- __POSITION__ надо подменить при отдаче страницы на текущее положение в очереди -->
     <h2 class="title">Ваша позиция в очереди:</h2>
     <h3 class="counter">__POSITION__</h3>
-    <p class="description">Пожалуйста не обновляйте страницу, как только очередь дойдет до вас страница сама обновится.</p>
+    <p class="description">Пожалуйста, не обновляйте страницу. Как только очередь дойдет до вас - страница обновится сама.</p>
 </div>
-<script type="application/javascript">
-    let updateQueueStatus = async function () {
-        try {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            let json = await response.json();
-            if (json.position === 0) {
-                location.reload();
-                // location.href = "https://egov.kz"
-            } else {
-                document.title = `Ваша позиции в очереди ${json.position}`;
-                document.getElementsByClassName("counter")[0].innerHTML = json.position;
-            }
-        } catch (error) {
-            console.error('Ошибка:', error);
-        }
-    };
-
-    const delaySeconds = 5;
-    const url = `http://${window.location.hostname}:${window.location.port}/queue`;
-
-    setInterval(updateQueueStatus, delaySeconds * 1000)
-</script>
 </body>

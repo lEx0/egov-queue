@@ -24,7 +24,7 @@ func main() {
 	logrus.Infoln("Watching expired redis keys")
 
 	// подписываемся на события истекания ключей (=бездействующие пользователи),
-	// и удаляем истекшие ключи из очереди
+	// и увеличиваем счетчик свободных мест
 	pubsub := c.Subscribe("__keyevent@0__:expired")
 	ch := pubsub.Channel()
 
