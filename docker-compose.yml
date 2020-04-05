@@ -1,0 +1,24 @@
+version: '3'
+services:
+  openresty:
+    image: openresty/openresty:latest
+    ports:
+    - 9191:9191
+    volumes:
+      - ./openresty/libs:/etc/nginx/lua/resty
+      - ./openresty/pages:/etc/nginx/lua/pages
+      - ./nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf
+  redis:
+    image: redis:4.0
+    command: "redis-server --notify-keyspace-events KEgx --loglevel debug"
+    volumes:
+      - redis:/data
+  # программа на го удаляет истекшие ключи из очереди
+  watcher:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./app:/src
+volumes:
+  redis:
