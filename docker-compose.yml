@@ -15,7 +15,7 @@ services:
         max-size: "1k"
   redis:
     image: redis:4.0
-    command: "redis-server --notify-keyspace-events KEgx --loglevel debug"
+    command: "redis-server --notify-keyspace-events KEgx"
     volumes:
       - redis:/data
     logging:
