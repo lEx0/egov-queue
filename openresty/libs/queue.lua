@@ -53,7 +53,7 @@ function _M.getPosition()
 
     local globalOffset, err = red:get("global_offset")
     if globalOffset == ngx.null then
-        globalOffset = tostring(ngx.var.queue_max_sessions)
+        globalOffset = tonumber(ngx.var.queue_max_sessions)
         red:set("global_offset", tostring(ngx.var.queue_max_sessions))
     end
 
