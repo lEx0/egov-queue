@@ -9,14 +9,6 @@ if not ok then
     return
 end
 
-red:set_timeouts(1000, 1000, 1000) -- 1 sec
-
-local ok, err = red:connect("redis", 6379)
-if not ok then
-    ngx.say("failed to connect to redis: ", err)
-    return
-end
-
 local args, err = ngx.req.get_uri_args()
 
 if not args.offset then
