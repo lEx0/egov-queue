@@ -35,12 +35,15 @@ end
 local myPosition, err = red:get(currentUuid)
 if myPosition == ngx.null then
     myPosition, err = red:incr("global_counter")
-    -- время жизни юзера - 20 секунд
-    red:setex(currentUuid, 20, myPosition)
 end
+
+-- время жизни юзера - 20 секунд
+red:setex(currentUuid, 20, myPosition)
+
 myPosition=tonumber(myPosition)
 ngx.log(ngx.INFO, "client position: " .. myPosition)
 
+-- todo унести в redis
 local globalOffset = 2
 
 ngx.say("<br>your position is ", myPosition, " ", myPosition - globalOffset)
