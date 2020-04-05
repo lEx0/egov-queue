@@ -14,6 +14,7 @@ local args, err = ngx.req.get_uri_args()
 if not args.offset then
     ngx.say("Usage: ?offset=123")
 else
-    red:set("global_offset", args.offset)
-    ngx.say("ok, new offset is ", args.offset)
+    local offset = tonumber(args.offset)
+    red:set("global_offset", offset)
+    ngx.say("ok, new offset is ", offset)
 end
