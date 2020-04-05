@@ -27,7 +27,7 @@ func main() {
 		// для решения Антона
 		c.Client.ZRem("user_queue", msg.Payload)
 		// для решения Амана
-		c.Client.Decr("global_counter")
+		c.Client.Incr("global_offset")
 	}
 }
 

@@ -43,8 +43,10 @@ red:setex(currentUuid, 20, myPosition)
 myPosition=tonumber(myPosition)
 ngx.log(ngx.INFO, "client position: " .. myPosition)
 
--- todo унести в redis
-local globalOffset = 2
+local globalOffset, err = red:get("global_offset")
+if globalOffset == ngx.null then
+    globalOffset = 0
+end
 
 ngx.say("<br>your position is ", myPosition, " ", myPosition - globalOffset)
 ngx.say("<br><br><0 means you must be redirected to egov. otherwise wait and reload the page")
