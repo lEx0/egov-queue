@@ -23,11 +23,11 @@ services:
         max-size: "1k"
   # программа на го удаляет истекшие ключи из очереди
   watcher:
-    build:
-      context: ./
-      dockerfile: Dockerfile
+    image: golang:1.13
     volumes:
       - ./app:/src
+    command: "go run main.go"
+    working_dir: /src
     logging:
       driver: "json-file"
       options:
