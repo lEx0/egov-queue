@@ -54,12 +54,11 @@
                 }
             });
             let json = await response.json();
-            if (json.status === true) {
+            if (json.position === 0) {
                 location.reload();
                 // location.href = "https://egov.kz"
             } else {
-                let statusText = `Ваша позиции в очереди ${json.position}`;
-                document.title = statusText;
+                document.title = `Ваша позиции в очереди ${json.position}`;
                 document.getElementsByClassName("counter")[0].innerHTML = json.position;
             }
         } catch (error) {
