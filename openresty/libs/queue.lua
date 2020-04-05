@@ -53,8 +53,8 @@ function _M.getPosition(size)
 
     local globalOffset, err = red:get("global_offset")
     if globalOffset == ngx.null then
-        globalOffset = size
-        red.set("global_offset", size)
+        globalOffset = tostring(size)
+        red.set("global_offset", tostring(size))
     end
 
     return myPosition - globalOffset, nil
