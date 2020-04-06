@@ -1,4 +1,4 @@
-module go.kolesa-team.org/gl/egov-balancer
+module go.kolesa-team.org/gl/balancer
 
 go 1.13
 

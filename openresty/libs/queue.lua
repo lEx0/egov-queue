@@ -1,4 +1,4 @@
---- Queue Egov
+--- Queue
 -- @module queue
 -- @license MIT
 -- @release 0.0.1
