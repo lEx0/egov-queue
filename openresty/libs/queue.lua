@@ -1,12 +1,50 @@
---- Queue
+--- Site Access Queue
 -- @module queue
 -- @license MIT
--- @release 0.0.1
+-- @release 0.0.2
 
 
 local _M = {
-    _VERSION = '0.0.1'
+    _VERSION = '0.0.2'
 }
+
+function _M.getStats()
+    local redis = require "resty.redis"
+    local red = redis:new()
+
+    red:set_timeouts(ngx.var.queue_redis_timeout, ngx.var.queue_redis_timeout, ngx.var.queue_redis_timeout) -- 1 sec
+
+    local ok, err = red:connect(ngx.var.queue_redis_host, ngx.var.queue_redis_port)
+    if not ok then
+        return 0, 0, 0, err
+    end
+
+    local globalOffset, err = red:get("global_offset")
+    if globalOffset == ngx.null then
+        globalOffset = tonumber(ngx.var.queue_max_sessions)
+    end
+
+    local globalCounter, err = red:get("global_counter")
+    if globalCounter == ngx.null then
+        globalCounter = 0
+    end
+
+    globalCounter = tonumber(globalCounter)
+    globalOffset = tonumber(globalOffset)
+
+    local availableSessions = globalOffset - globalCounter
+
+    if availableSessions < 0 then
+        availableSessions = 0
+    end
+
+    local queueSize = globalCounter - globalOffset
+    if queueSize < 0 then
+        queueSize = 0
+    end
+
+    return availableSessions, queueSize, tonumber(ngx.var.queue_max_sessions), nil
+end
 
 function _M.getPosition()
     local ck = require "resty.cookie"
